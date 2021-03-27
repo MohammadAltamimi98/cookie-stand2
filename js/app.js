@@ -1,9 +1,14 @@
 'use strict';
 let workingHours=['6am','7am','8am','9am','10am', '11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm', 'Daily location total'];
+
 let tableEL=document.createElement('table');
 let theParent=document.getElementById('tablePlace');
 theParent.appendChild(tableEL);
 
+
+function deleteRow(){
+  tableEL.deleteRow(tableEL.rows.length-1);
+}
 
 function getRandomIntInclusive(min, max) {
   return (Math.floor(Math.random() * (max - min + 1) + min));
@@ -13,6 +18,7 @@ function getRandomIntInclusive(min, max) {
 let locationGloblal=[];
 
 
+// constructor function
 function Storelocation(location,minCustomer,maxCustomer,AvgCookiePerSale)
 {
   this.location=location;
@@ -37,7 +43,7 @@ Storelocation.prototype.getRandomCustomer= function()
 
 
 Storelocation.prototype.calSalePerHour=function(){
-  let amountSoldPerHour = 1;
+  let amountSoldPerHour = 0;
   for (let i=0;i<workingHours.length;i++)
   {
 
@@ -45,28 +51,11 @@ Storelocation.prototype.calSalePerHour=function(){
     this.avgSalePerHour.push(amountSoldPerHour);
   }
 };
-Storelocation.prototype.innerData=function (){
-  // for(let i=0;i<locationGloblal.length;i++){
-  //   let newRows=document.createElement('tr');
-  //   tableEL.appendChild(newRows);
-  //   for(let j=0;j<workingHours.length+2;j++){
 
-  //     if (j===0){
-  //       let newCells=document.createElement('td');
-  //       newRows.appendChild(newCells);
-  //       newCells.textContent=locationGloblal[i].location;
-  //     } else if (j<15){
-  //       let newCells=document.createElement('td');
-  //       newRows.appendChild(newCells);
-  //       newCells.textContent=locationGloblal[i].avgSalePerHour[j-1];
-  //     } else if (j===15){
-  //       let newCells=document.createElement('td');
-  //       newRows.appendChild(newCells);
-  //       newCells.textContent=locationGloblal[i].totalCookiesPerDay;
-  //     }
-  //   }
+Storelocation.prototype.innerData=function (){
   let newRow=document.createElement('tr');
   tableEL.appendChild(newRow);
+
   let tdEL=document.createElement('td');
   tdEL.textContent=this.location;
   newRow.appendChild(tdEL);
@@ -90,7 +79,7 @@ Storelocation.prototype.innerData=function (){
 
 
 
-  // }
+
 
 };
 
@@ -113,18 +102,8 @@ function header(){
     headerEL.appendChild(headerData);
   }
 
-  // let headerTotal=document.createElement('th');
-  // headerEL.appendChild(headerTotal);
-  // headerTotal.textContent='Daily location total';
-
-
-
 }
 header();
-
-
-
-
 
 
 
@@ -135,6 +114,8 @@ const tokyo= new Storelocation('tokyo',3,24,1.2);
 const dubai= new Storelocation('dubai',11,38,3.7);
 const paris= new Storelocation('paris',20,38,2.3);
 const lima= new Storelocation('lima',2,16,4.6);
+
+
 
 // // //console.log(seattle);
 seattle.getRandomCustomer();
@@ -168,7 +149,6 @@ lima.innerData();
 function footerEl1(){
 
 
-
   let footerEL=document.createElement('tr');
   tableEL.appendChild(footerEL);
   let footerData=document.createElement('th');
@@ -177,47 +157,35 @@ function footerEl1(){
 
 
 
-  // let total=0;
   let sum=0;
   for (let i=0;i<workingHours.length; i++){
     let footerDataTh = document.createElement('th');
 
     for(let j=0;j<locationGloblal.length;j++){
       if((workingHours.length-1)===i){
-        sum =sum + locationGloblal[j].totalCookiesPerDay;
+        sum = sum + locationGloblal[j].totalCookiesPerDay;
 
       }
+
       else{
         sum=sum + locationGloblal[j].avgSalePerHour[i];
 
       }
 
     }
-    // footerData=document.createElement('th');
-    // footerEL.appendChild(footerData);
 
     footerDataTh.textContent=sum;
     footerEL.appendChild(footerDataTh);
-    // total=total+sum;
     sum=0;
 
   }
-  // console.log(locationGloblal);
-  // for(let i=0;i<workingHours.length+2;i++){
-  //   if (i===15){
-  //     let footerData=document.createElement('th');
-  //     footerEL.appendChild(footerData);
-  //     footerData.textContent=total;}
-
-  // }
 }
 footerEl1();
 
 
 // Form elements
 let storeform=document.getElementById('storeform');
-// let formsection=document.getElementById('formsection');
-// formsection.appendChild(storeform);
+
 
 storeform.addEventListener('submit', addNewBranch);
 function addNewBranch(event)
@@ -228,9 +196,12 @@ function addNewBranch(event)
   let mincust=event.target.mincust.value;
   let maxcust=event.target.maxcust.value;
   let avgsale=event.target.avgsale.value;
+
   let newlocation= new Storelocation(locationnew,mincust,maxcust,avgsale);
+  deleteRow();
   newlocation.getRandomCustomer();
   newlocation.calSalePerHour();
   newlocation.innerData();
+  footerEl1();
 }
 
