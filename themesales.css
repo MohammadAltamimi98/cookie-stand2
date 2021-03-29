@@ -105,9 +105,12 @@ h1{display: block;
     width: 1000PX;
     background-color: #EFB5A7;
     padding-top: 50px;
-    border-radius: 25px;
+    border-radius: 16px;
     
     }
+
+    #footerp { font-size: 18px;
+    margin-top:-5px;}
     
     
     
